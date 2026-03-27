@@ -1,0 +1,17 @@
+--- 
+
+common_packages:
+  - curl
+  - wget
+  - vim
+  - git
+  - openssh-server
+  - htop
+  - unzip
+
+timezone: America/Mexico_City
+dev_user: FranciscoFlores
+
+ssh_disable_root: true
+ssh_disable_password_auth: false
+  

@@ -1,0 +1,8 @@
+dev_user: FranciscoFlores
+
+dev_tools:
+  - git
+  - curl
+  - htop
+
+install_dev_tools: true
