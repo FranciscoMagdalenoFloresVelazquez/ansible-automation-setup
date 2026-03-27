@@ -24,11 +24,13 @@ This project aims to automate the configuration of multiple Linux nodes in a hom
 
 ## Project Structure
 
+## 📁 Project Structure
+
+```
 ansible-automation-setup/
 ├── ansible.cfg
 ├── requirements.yaml
 ├── README.md
-│
 ├── inventories/
 │   └── home_lab/
 │       ├── hosts.ini
@@ -36,12 +38,10 @@ ansible-automation-setup/
 │           ├── all.yaml
 │           ├── docker.yaml
 │           └── dev_env.yaml
-│
 ├── playbooks/
 │   ├── setup.yaml
 │   ├── docker.yaml
 │   └── dev_env.yaml
-│
 ├── roles/
 │   ├── common/
 │   │   ├── defaults/
@@ -57,7 +57,6 @@ ansible-automation-setup/
 │   │   │   └── main.yaml
 │   │   ├── templates/
 │   │   └── files/
-│
 │   ├── docker/
 │   │   ├── defaults/
 │   │   │   └── main.yaml
@@ -69,7 +68,6 @@ ansible-automation-setup/
 │   │   │   └── main.yaml
 │   │   ├── templates/
 │   │   └── files/
-│
 │   ├── dev_env/
 │   │   ├── defaults/
 │   │   │   └── main.yaml
@@ -81,6 +79,7 @@ ansible-automation-setup/
 │   │   │   └── main.yaml
 │   │   ├── templates/
 │   │   └── files/
+```
 
 
 ## Roles Overview
