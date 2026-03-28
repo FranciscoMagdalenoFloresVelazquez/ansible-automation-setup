@@ -10,8 +10,8 @@ common_packages:
   - unzip
 
 timezone: America/Mexico_City
-dev_user: FranciscoFlores
+dev_user: defaultuser
 
-ssh_disable_root: true
+ssh_disable_root: false
 ssh_disable_password_auth: false
   

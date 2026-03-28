@@ -21,4 +21,5 @@
     path: /etc/ssh/sshd_config
     regexp: '^AllowUsers'
     line: 'AllowUsers {{ dev_user }}'
+  when: ssh_disable_password_auth
   notify: Restart SSH

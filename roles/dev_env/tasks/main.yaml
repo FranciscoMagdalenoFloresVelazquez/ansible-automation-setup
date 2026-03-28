@@ -1,81 +1,78 @@
 ---
-- name: instalar lazyvim
-  hosts: nodos
-  become: true 
+
+- name: actualizar paquetes de ubuntu
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: dist
+
+- name: instalar dependencias
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - tar
+    - curl
+    - npm
+    - nodejs
+
+- name: instalar herramientas devops
+  ansible.builtin.apt:
+    name: "{{ dev_tools }}"
+    state: present
+  when: install_dev_tools
+
+- name: descargar neovim
+  ansible.builtin.get_url:
+    url: https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    dest: /tmp/nvim-linux-x86_64.tar.gz
+
+- name: eliminar configuracion antigua de neovim
+  ansible.builtin.shell: 
+    sudo rm -rf /opt/nvim-linux-x86_64
   
-  tasks:
-    
-    - name: actualizar paquetes de ubuntu
-      ansible.builtin.apt:
-        update_cache: true
-        upgrade: dist
-    
-    - name: instalar dependencias
-      ansible.builtin.apt:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - tar
-        - curl
-        - npm
-        - nodejs
+- name: Crear directorio destino
+  ansible.builtin.file:
+    path: /etc/profile.d/nvim.sh
+    state: touch
+    mode: '0755'
 
-    - name: instalar herramientas devops
-      ansible.builtin.apt:
-        name: "{{ dev_tools }}"
-        state: present
-      when: install_dev_tools
+- name: descomprimir archivo descargado nvim-linux-x86_64
+  ansible.builtin.unarchive:
+    src: /tmp/nvim-linux-x86_64.tar.gz
+    dest: /opt
+    remote_src: yes
 
-    - name: descargar neovim
-      ansible.builtin.get_url:
-        url: https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-        dest: /tmp/nvim-linux-x86_64.tar.gz
+- name: agregar path al final del archivo para poder ejecutar nvim
+  ansible.builtin.lineinfile:
+    path: /etc/profile.d/nvim.sh
+    line: export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+    insertafter: EOF
 
-    - name: eliminar configuracion antigua de neovim
-      ansible.builtin.shell: 
-        sudo rm -rf /opt/nvim-linux-x86_64
-      
-    - name: Crear directorio destino
-      ansible.builtin.file:
-        path: /etc/profile.d/nvim.sh
-        state: touch
-        mode: '0755'
+- name: clonar repo de lazyvim desde github
+  ansible.builtin.git:
+    repo: https://github.com/LazyVim/starter
+    dest: ~/.config/nvim
+  become: false 
+# Ansible Installation
+- name: instalar pipx
+  ansible.builtin.apt:
+    name: pipx
+    state: present
+  become: true
 
-    - name: descomprimir archivo descargado nvim-linux-x86_64
-      ansible.builtin.unarchive:
-        src: /tmp/nvim-linux-x86_64.tar.gz
-        dest: /opt
-        remote_src: yes
+- name: actualizar pipx
+  ansible.builtin.shell:
+    python3 -m pip install --user --upgrade pipx --break-system-packages
+ 
+- name: instalar ansible
+  community.general.pipx: 
+    name: ansible 
+    state: present
+    install_deps: yes
 
-    - name: agregar path al final del archivo para poder ejecutar nvim
-      ansible.builtin.lineinfile:
-        path: /etc/profile.d/nvim.sh
-        line: export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
-        insertafter: EOF
-
-    - name: clonar repo de lazyvim desde github
-      ansible.builtin.git:
-        repo: https://github.com/LazyVim/starter
-        dest: ~/.config/nvim
-      become: false 
-
-   # Ansible Installation 
-    
-    - name: instalar pipx
-      ansible.builtin.apt:
-        name: pipx
-        state: present
-      become: true
-
-    - name: instalar ansible
-      community.general.pipx: 
-        name: ansible 
-        state: present
-        install_deps: yes
-
-    - name: agregar path a .bashrc
-      ansible.builtin.lineinfile:
-        path: ~/.bashrc
-        line: export PATH="$HOME/.local/bin:$PATH"
-        insertafter: EOF
+- name: agregar path a .bashrc
+  ansible.builtin.lineinfile:
+    path: ~/.bashrc
+    line: export PATH="$HOME/.local/bin:$PATH"
+    insertafter: EOF
 

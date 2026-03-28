@@ -9,4 +9,4 @@
   ansible.builtin.apt:
     name: "{{ common_packages }}"
     state: present
-  notify: Ensure SSH is runnig
+  notify: Ensure SSH is running

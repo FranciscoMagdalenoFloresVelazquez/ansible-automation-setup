@@ -106,7 +106,7 @@ Sets up development tools:
 Run the main playbook:
 
 ```bash
-ansible-playbook playbooks/setup.yml
+ansible-playbook playbooks/setup.yaml
 
 ## Requirements
 
